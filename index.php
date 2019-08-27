@@ -20,6 +20,7 @@ $database = new Database();
 </head>
 <body>
 
+    <?php if (isset($_SESSION['cart_item']) && !empty($_SESSION['cart_item'])) { ?>
     <div class="container">
         <h2>Giỏ hàng</h2>
         <p>Chi tiết giỏ hàng của bạn</p>
@@ -36,20 +37,40 @@ $database = new Database();
             </tr>
             </thead>
             <tbody>
+            <?php
+            $total =  0;
+            foreach ($_SESSION['cart_item'] as $key_car => $val_cart_item) : ?>
             <tr>
-                <td>1</td>
-                <td>Camera</td>
-                <td></td>
-                <td>100000</td>
-                <td>2</td>
-                <td>200000</td>
-                <td><a href="#">Xóa</a></td>
+                <td><?php echo $val_cart_item['id'] ?></td>
+                <td><?php echo $val_cart_item['product_name'] ?></td>
+                <td><img class="card-img-top" style="height: 25px; width: auto; display: block;" src="images/<?php echo $val_cart_item['product_image'] ?>" data-holder-rendered="true"></td>
+                <td><?php echo $val_cart_item['price'] ?></td>
+                <td><?php echo $val_cart_item['quantity'] ?></td>
+                <td><?php
+                    $total_item = $val_cart_item['price'] * $val_cart_item['quantity'];
+                    echo number_format($total_item,0,"",".");
+                    ?> VND </td>
+                <td>
+                    <form action="process.php" name="remove<?php $val_cart_item['id'] ?>" method="post">
+                        <input type="hidden" name="product_id" value="<?php echo $val_cart_item['id'] ?>">
+                        <input type="hidden" name="action" value="remove">
+                        <input type="submit" name="submit" class="btn btn-sm btn-outline-secondary" value="Xóa" />
+                    </form>
+                </td>
             </tr>
+            <?php
+                $total += $total_item;
+            endforeach; ?>
             </tbody>
         </table>
-        <div>Tổng hóa đơn thanh toán <strong>200000</strong></div>
+        <div>Tổng hóa đơn thanh toán <strong><?php echo number_format($total,0,",",".") ?> VNĐ</strong></div>
     </div>
-
+    <?php } else { ?>
+        <div class="container">
+            <h2>Giỏ hàng</h2>
+            <p>Giỏ hàng của bạn đang rỗng</p>
+        </div>
+    <?php }  ?>
     <div class="container" style="margin-top: 50px">
         <div class="row">
             <?php
