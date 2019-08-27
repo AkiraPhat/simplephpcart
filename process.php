@@ -69,10 +69,9 @@ if ( isset($_POST) && !empty($_POST)){
                     $product_id = $_POST['$product_id'];
                     if ( isset($_SESSION['cart_item'][$product_id])){
                         unset($_SESSION['cart_item'][$product_id]);//Hủy phần tử trong mảng
-
                     }
                 }
-
+                break;
             default:
                 echo 'Action ko tồn tại';
                 die();
